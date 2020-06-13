@@ -133,8 +133,8 @@ public class MainActivity extends AppCompatActivity {
         Log.i("info","resume");
         super.onResume();
         if(accelerometerPresent){
-            sensorManager.registerListener(ExampleService.accelerometerListener, accelerometerSensor,3000);
-            sensorManager.registerListener(ExampleService.accelerometerListener, proximitySensor, 3000);
+            sensorManager.registerListener(ExampleService.accelerometerListener, accelerometerSensor,2000,ExampleService.serviceHandler);
+            sensorManager.registerListener(ExampleService.accelerometerListener, proximitySensor, 2000,ExampleService.serviceHandler);
         }
     }
 

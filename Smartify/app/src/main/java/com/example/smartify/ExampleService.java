@@ -85,7 +85,7 @@ public class ExampleService extends Service {
     boolean proximity=true;
     boolean accelerometer=false;
     private Looper serviceLooper;
-    private ServiceHandler serviceHandler;
+    static public ServiceHandler serviceHandler;
     static boolean flip;
     private static Timer timer = new Timer();
     int fFlag=0;
@@ -155,29 +155,7 @@ public class ExampleService extends Service {
 
     }
 
-    class ForegroundCheckTask extends AsyncTask<Context, Void, Boolean> {
 
-        @Override
-        protected Boolean doInBackground(Context... params) {
-            final Context context = params[0].getApplicationContext();
-            return isAppOnForeground(context);
-        }
-
-        private boolean isAppOnForeground(Context context) {
-            ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-            List<ActivityManager.RunningAppProcessInfo> appProcesses = activityManager.getRunningAppProcesses();
-            if (appProcesses == null) {
-                return false;
-            }
-            final String packageName = context.getPackageName();
-            for (ActivityManager.RunningAppProcessInfo appProcess : appProcesses) {
-                if (appProcess.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND && appProcess.processName.equals(packageName)) {
-                    return true;
-                }
-            }
-            return false;
-        }
-    }
 
     // Use like this:
 
@@ -200,7 +178,7 @@ public class ExampleService extends Service {
                    //   Log.i("info","sensorchanged");
                          if(flip) {
                             if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-                                if (event.values[2] <= -9.4) {
+                                if (event.values[2] <= -9.6) {
                                     accelerometer = true;
                                 } else {
                                     accelerometer = false;
@@ -394,14 +372,6 @@ public class ExampleService extends Service {
         else
             startForeground(1, new Notification());
         wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        try {
-            boolean foregroud = new ForegroundCheckTask().execute(this).get();
-            Log.d("foregoroundCheck", String.valueOf(foregroud));
-        } catch (Exception e) {
-            Log.i("foregrund check","error");
-            e.printStackTrace();
-        }
-
         thread.start();
         serviceLooper = thread.getLooper();
         serviceHandler = new ServiceHandler(serviceLooper);
