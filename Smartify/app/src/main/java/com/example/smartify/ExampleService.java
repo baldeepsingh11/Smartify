@@ -76,6 +76,7 @@ public class ExampleService extends Service {
     public static ArrayList<Double> longitudeList= new ArrayList<Double>();
     public static ArrayList<Integer> wifiList= new ArrayList<Integer>();
     public static ArrayList<Integer> radiusList= new ArrayList<Integer>();
+    public static String lastAppString=null;
     WindowManager wm;
     LinearLayout ll;
     private View overlay;
@@ -122,11 +123,11 @@ public class ExampleService extends Service {
                     case(1):
                         Log.d(TAG, "Headset plugged");
                         //  Intent intent1 = new Intent(context,MainActivity2.class);
-                        Intent intent1 = getPackageManager().getLaunchIntentForPackage("com.google.android.youtube");
+                        if(lastAppString!=null){Intent intent1 = getPackageManager().getLaunchIntentForPackage(lastAppString);
                         intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         if (intent1 != null) {
                             ExampleService.this.startActivity(intent1);//null pointer check in case package name was not found
-                        }
+                        }}
 
                         // context.startActivity(intent1);
                         break;
