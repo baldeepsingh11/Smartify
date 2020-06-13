@@ -63,14 +63,8 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(MainActivity.this, "First Run", Toast.LENGTH_LONG)
                     .show();
         }
-<<<<<<< HEAD
-        /*Intent intent = new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS);
-        startActivity(intent);
 
-        Intent intent1 = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
-        startActivity(intent1);*/
-=======
->>>>>>> baldeep
+        \
 
         mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         if (!mNotificationManager.isNotificationPolicyAccessGranted()) {
