@@ -101,6 +101,7 @@ public class ExampleService extends Service {
     public static Marker mCurrLocationMarker;
     WindowManager.LayoutParams orientationLayout;
     int rotateFlag =0;
+    String TAG = "debugging";
     String currentApp="";
     int count =0;
     class HeadsetIntentReceiver extends BroadcastReceiver {
@@ -196,10 +197,10 @@ public class ExampleService extends Service {
 
                     @Override
                     public void onSensorChanged(SensorEvent event) {
-                      //  Log.i("info","sensorchanged");
+                   //   Log.i("info","sensorchanged");
                          if(flip) {
                             if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-                                if (event.values[2] <= -9.5) {
+                                if (event.values[2] <= -9.4) {
                                     accelerometer = true;
                                 } else {
                                     accelerometer = false;
@@ -218,26 +219,25 @@ public class ExampleService extends Service {
                             }
 
 
-                            if (!accelerometer || !proximity) {
-                          //      Log.i("status","faceup");
-                               if (fFlag==1) {
-                                    //    face.setText("Face UP");
-                                    mNotificationManager.setInterruptionFilter(NotificationManager.INTERRUPTION_FILTER_ALL);
-                                    fFlag=0;
-
+                            if (!accelerometer && !proximity) {
+                                if (fFlag==1) {
+                                   fFlag=0;
+                                   Log.i(TAG, "onSensorChanged:face up");
+                                   mNotificationManager.setInterruptionFilter(NotificationManager.INTERRUPTION_FILTER_ALL);
                                 }
 
                             } else if (accelerometer && proximity) {
                                if (fFlag==0) {
                                    fFlag=1;
-                                    //    face.setText("Face DOWN");
+                                   Log.i(TAG, "onSensorChanged:face down");
+
                                    new CountDownTimer(2000, 100) {
 
                                        public void onTick(long millisUntilFinished) {
 
                                            innerflag = 0;
                                            Log.d("time",String.valueOf(millisUntilFinished));
-                                           if(!accelerometer || !proximity)
+                                           if(!accelerometer && !proximity)
                                            {
                                                innerflag = 1;
                                                fFlag=0;
@@ -249,8 +249,8 @@ public class ExampleService extends Service {
 
                                        @SuppressLint("WrongConstant")
                                        public void onFinish() {
-                                           Log.i("finish","true");
-                                           if(innerflag==0) {
+                                        //   Log.i("finish","true");
+                                          if(innerflag==0) {
                                                mNotificationManager.setInterruptionFilter(flipSettings);
                                                Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
                                                // Vibrate for 500 milliseconds
