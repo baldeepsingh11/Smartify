@@ -14,9 +14,13 @@ import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.model.Marker;
@@ -50,11 +54,74 @@ public class MainActivity extends AppCompatActivity {
         Intent autoIntent = new Intent(MainActivity.this, autoRotate.class);
         startActivity(autoIntent);
     }
+    private int i=0;
+    private ImageView imageView;
+    private ImageView imageDesmartify;
+    Toast toastObject;
+
+    Handler handler=new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            if (msg.what==100){
+                i=0;
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        imageView= findViewById(R.id.imageView);
+        imageDesmartify= findViewById(R.id.imageViewDesmartify);
+        imageDesmartify.setOnLongClickListener(new View.OnLongClickListener() {
+
+            @Override
+            public boolean onLongClick(View v) {
+                imageDesmartify.animate().alpha(0).setDuration(500);
+                imageView.animate().alpha(1).setDuration(500);
+                Toast.makeText(MainActivity.this, "Smartifyed :)", Toast.LENGTH_SHORT).show();
+                Intent serviceIntent = new Intent(MainActivity.this,ExampleService.class);
+                startService(serviceIntent);
+                return true;
+            }
+        });
+        imageDesmartify.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (i==0){
+                    ++i;
+                    handler.sendEmptyMessageDelayed(100,4000); // 3000 equal 3sec , you can set your own limit of secs
+                }else if(i==6){
+                    toastObject.cancel();
+                    toastObject =Toast.makeText(MainActivity.this, "Desmartifyed!" , Toast.LENGTH_SHORT);
+                    toastObject.show();
+                    i=0;
+                    handler.removeMessages(100);
+                    imageView.animate().rotationYBy(360).alpha(0).setDuration(500);
+                    imageDesmartify.animate().rotationYBy(360).alpha(1).setDuration(500);
+                    Intent serviceIntent = new Intent(MainActivity.this,ExampleService.class);
+                    stopService(serviceIntent);
+                }else if (i==3) {
+                    ++i;
+                    toastObject =Toast.makeText(MainActivity.this, "three steps away from desmartifying" , Toast.LENGTH_SHORT);
+                    toastObject.show();
+                }else if (i==4) {
+                    ++i;
+                    toastObject.cancel();
+                    toastObject =Toast.makeText(MainActivity.this, "two steps away from desmartifying" , Toast.LENGTH_SHORT);
+                    toastObject.show();
+                }else if (i==5) {
+                    ++i;
+                    toastObject.cancel();
+                    toastObject =Toast.makeText(MainActivity.this, "one steps away from desmartifying" , Toast.LENGTH_SHORT);
+                    toastObject.show();
+                }
+                else{
+                    i++;
+                }
+            }
+        });
         Boolean isFirstRun = getSharedPreferences("PREFERENCE", MODE_PRIVATE)
                 .getBoolean("isFirstRun", true);
         if (isFirstRun) {
