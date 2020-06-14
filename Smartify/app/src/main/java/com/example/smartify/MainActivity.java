@@ -64,7 +64,6 @@ public class MainActivity extends AppCompatActivity {
                     .show();
         }
 
-        \
 
         mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         if (!mNotificationManager.isNotificationPolicyAccessGranted()) {

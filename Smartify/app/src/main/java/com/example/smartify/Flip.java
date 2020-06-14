@@ -1,6 +1,8 @@
 package com.example.smartify;
 
+import android.content.Context;
 import android.content.res.ColorStateList;
+import android.os.Build;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -11,6 +13,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -29,7 +33,7 @@ import co.mobiwise.materialintro.view.MaterialIntroView;
 import static com.example.smartify.ExampleService.flipSettings;
 
 public class Flip extends AppCompatActivity {
-
+    FloatingActionButton fab;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -89,7 +93,15 @@ public class Flip extends AppCompatActivity {
         setContentView(R.layout.activity_flip);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        FloatingActionButton fab = findViewById(R.id.fab);
+        fab = findViewById(R.id.fab);
+        if(ExampleService.flip==true)
+        {
+            fab.setImageResource(R.drawable.ic_do_not_disturb_on_white_24dp);
+        }
+        else
+        {
+            fab.setImageResource(R.drawable.ic_do_not_disturb_off_white_24dp);
+        }
         new MaterialIntroView.Builder(this)
                 .enableDotAnimation(true)
                 .enableIcon(true)
@@ -105,7 +117,6 @@ public class Flip extends AppCompatActivity {
                 .setUsageId("intro_fab") //THIS SHOULD BE UNIQUE ID
                 .setMaskColor(ContextCompat.getColor(Flip.this,R.color.whiteTransparent))
                 .show();
-        fab.setImageResource(R.drawable.ic_do_not_disturb_on_black_24dp);
         fab.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(Flip.this, R.color.colorPrimary)));
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -117,11 +128,29 @@ public class Flip extends AppCompatActivity {
                 {
                     ExampleService.flip=false;
                     Toast.makeText(Flip.this, "Switched off", Toast.LENGTH_SHORT).show();
+                    fab.setImageResource(R.drawable.ic_do_not_disturb_off_white_24dp);
+                    Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+                    // Vibrate for 500 milliseconds
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        v.vibrate(VibrationEffect.createOneShot(200, VibrationEffect.DEFAULT_AMPLITUDE));
+                    } else {
+                        //deprecated in API 26
+                        v.vibrate(200);
+                    }
                 }
                 else
                 {
                     ExampleService.flip=true;
                     Toast.makeText(Flip.this, "Switched on", Toast.LENGTH_SHORT).show();
+                    fab.setImageResource(R.drawable.ic_do_not_disturb_on_white_24dp);
+                    Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+                    // Vibrate for 500 milliseconds
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        v.vibrate(VibrationEffect.createOneShot(200, VibrationEffect.DEFAULT_AMPLITUDE));
+                    } else {
+                        //deprecated in API 26
+                        v.vibrate(200);
+                    }
                 }
             }
         });

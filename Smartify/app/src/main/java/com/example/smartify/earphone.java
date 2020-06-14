@@ -39,6 +39,8 @@ public class earphone extends ListActivity {
         packageManager = getPackageManager();
 
         new LoadApplications().execute();
+        getListView().setDividerHeight(0);
+        getListView().setDivider(null);
     }
 
     @Override

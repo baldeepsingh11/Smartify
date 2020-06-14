@@ -492,7 +492,7 @@ public class ExampleService extends Service {
 
                         if(autoRotate.selectedappsstring.get(strDay).equals( mpackageName))
                         {   Log.d("debug2","matched");
-                            if(!currentApp.equals(mpackageName)&&rotateFlag==0){
+                            if(!currentApp.equals(mpackageName)||rotateFlag==0){
                                 Log.i("auto rotate", "on");
                                 currentApp=mpackageName;
                                 rotateFlag=1;
