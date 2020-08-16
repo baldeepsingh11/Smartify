@@ -2,6 +2,7 @@ package com.example.smartify;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
@@ -101,5 +102,7 @@ public class ApplicationAdapter extends ArrayAdapter<ApplicationInfo> {
 
         }
     };
+
+    
 
 }

@@ -44,6 +44,28 @@ public class autoRotate extends ListActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_auto_rotate);
 
+        if (android.os.Build.VERSION.SDK_INT >= 23 && !Settings.canDrawOverlays(this)) {   //Android M Or Over
+            Log.i("hbjbdjjx","vbdhbvhdxb");
+            new AlertDialog.Builder(autoRotate.this)
+                    .setTitle("Permission")
+                    .setIcon(android.R.drawable.ic_btn_speak_now)
+                    .setMessage("Please grant overlay permission")
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent intent1 = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
+                            startActivity(intent1);
+                        }
+                    })
+                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
+                    })
+                    .show();
+
+        }
+
         packageManager = getPackageManager();
 
         new LoadApplications().execute();

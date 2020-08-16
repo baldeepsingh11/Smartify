@@ -1,6 +1,13 @@
 package com.example.smartify;
 
+import android.app.AlertDialog;
+import android.app.AppOpsManager;
+import android.app.NotificationManager;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.os.Build;
 import android.os.Bundle;
@@ -15,6 +22,8 @@ import androidx.core.content.ContextCompat;
 
 import android.os.VibrationEffect;
 import android.os.Vibrator;
+import android.provider.Settings;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -31,6 +40,7 @@ import co.mobiwise.materialintro.shape.ShapeType;
 import co.mobiwise.materialintro.view.MaterialIntroView;
 
 import static com.example.smartify.ExampleService.flipSettings;
+import static com.example.smartify.MainActivity.mNotificationManager;
 
 public class Flip extends AppCompatActivity {
     FloatingActionButton fab;
@@ -92,6 +102,51 @@ public class Flip extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_flip);
         Toolbar toolbar = findViewById(R.id.toolbar);
+
+        mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        if (!mNotificationManager.isNotificationPolicyAccessGranted()) {
+            Log.i("hbjbdjjx","vbdhbvhdxb");
+            new AlertDialog.Builder(Flip.this)
+                    .setTitle("Permission")
+                    .setIcon(android.R.drawable.ic_btn_speak_now)
+                    .setMessage("Please grant DND permission")
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent intent = new Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
+                            startActivity(intent);
+                        }
+                    })
+                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
+                    })
+                    .show();
+        }
+
+        if (!isUsageAccessGranted()) {
+            Log.i("hbjbdjjx","vbdhbvhdxb");
+            new AlertDialog.Builder(Flip.this)
+                    .setTitle("Permission")
+                    .setIcon(android.R.drawable.ic_btn_speak_now)
+                    .setMessage("Please grant usage access permission")
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent intent = new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS);
+                            startActivity(intent);
+                        }
+                    })
+                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
+                    })
+                    .show();
+            
+        }
+
         setSupportActionBar(toolbar);
         fab = findViewById(R.id.fab);
         if(ExampleService.flip==true)
@@ -161,6 +216,23 @@ public class Flip extends AppCompatActivity {
             alarms.setChecked(true);
         }*/
 
+    }
+
+    private boolean isUsageAccessGranted() {
+        try {
+            PackageManager packageManager = getPackageManager();
+            ApplicationInfo applicationInfo = packageManager.getApplicationInfo(getPackageName(), 0);
+            AppOpsManager appOpsManager = (AppOpsManager) getSystemService(Context.APP_OPS_SERVICE);
+            int mode = 0;
+            if (android.os.Build.VERSION.SDK_INT > android.os.Build.VERSION_CODES.KITKAT) {
+                mode = appOpsManager.checkOpNoThrow(AppOpsManager.OPSTR_GET_USAGE_STATS,
+                        applicationInfo.uid, applicationInfo.packageName);
+            }
+            return (mode == AppOpsManager.MODE_ALLOWED);
+
+        } catch (PackageManager.NameNotFoundException e) {
+            return false;
+        }
     }
 
 }

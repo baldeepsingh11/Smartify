@@ -132,27 +132,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-        mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        if (!mNotificationManager.isNotificationPolicyAccessGranted()) {
-            new AlertDialog.Builder(MainActivity.this)
-                    .setTitle("Permission")
-                    .setIcon(android.R.drawable.ic_btn_speak_now)
-                    .setMessage("Please grant DND permission")
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            Intent intent = new Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
-                            startActivity(intent);
-                        }
-                    })
-                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                        }
-                    })
-                    .show();
-
-        }
         sensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
         proximitySensor = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
         List<Sensor> sensorList = sensorManager.getSensorList(Sensor.TYPE_ACCELEROMETER);
